@@ -14,7 +14,8 @@ jobs:
         filename: 'release.zip'
         exclusions: '*.git* /*node_modules/* .editorconfig'       
     - name: Upload Release
-    - uses: ncipollo/release-action@v1
+      uses: ncipollo/release-action@v1
       with:
-        artifacts: "release.tar.gz,foo/*.txt"
-        bodyFile: "body.md"        
+        artifacts: "release.zip"
+        tag_name: ${{ github.ref }}
+        token: ${{ secrets.GITHUB_TOKEN }}       
