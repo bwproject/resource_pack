@@ -1,10 +1,10 @@
 name: Create Resource Pack
-on: [push]
-#on:
-#  push:
-#    # Sequence of patterns matched against refs/tags
-#    tags:
-#      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+#on: [push]
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,18 +37,7 @@ jobs:
           format: "zip"
           name: ProjectBW_Fonts
 #          include: "**/*.(ts|js|css|html)"
-
-      - uses: sokuhatiku/ftp-upload-artifact@v1.0.0
-        with:
-          name: my-artifact
-          path: path/to/artifact/ProjectBW_Fonts.zip
-          host: ${{ secrets.FTP_HOST }}
-          port: 21
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          secure: false
-          remote-path: ${{ secrets.FTP_PATH }}
-                 
+                
       - uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -58,3 +47,13 @@ jobs:
           asset_name: ${{ steps.archive.outputs.name }}
           asset_content_type: ${{ steps.archive.outputs.media-type }}
 
+      - uses: sokuhatiku/ftp-upload-artifact@v1.0.0
+        with:
+          name: ${{ steps.archive.outputs.name }}
+          path: ${{ steps.archive.outputs.path }}
+          host: ${{ secrets.FTP_HOST }}
+          port: 21
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          secure: false
+          remote-path: ${{ secrets.FTP_PATH }}
