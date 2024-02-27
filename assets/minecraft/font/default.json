@@ -1,0 +1,94 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "minecraft:font/logo_bw.png",
+            "ascent": 5,
+            "height": 30,
+            "chars": [
+                    "\u00F7"
+                ]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:font/logo_bw2.png",
+            "ascent": 5,
+            "height": 30,
+            "chars": [
+                    "\u00C7"
+                ]
+        },		
+        {
+            "type": "bitmap",
+            "file": "minecraft:font/01.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": [
+                    "\u00DE"
+                ]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:font/02.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": [
+                    "\u00FF"
+                ]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:font/03.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": [
+                    "\u00E0"
+                ]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:font/04.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": [
+                    "\u00E1"
+                ]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:font/05.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": [
+                    "\u00E3"
+                ]
+        },
+		{
+            "type": "bitmap",
+            "file": "minecraft:font/06.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": [
+                    "\u00D6"
+                ]
+        },
+		{
+            "type": "bitmap",
+            "file": "minecraft:font/07.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": [
+                    "\u00D8"
+                ]
+        },					
+        {
+            "type": "bitmap",
+            "file": "minecraft:font/08.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": [
+                    "\u00E5"
+                ]
+        }		
+    ]
+}
