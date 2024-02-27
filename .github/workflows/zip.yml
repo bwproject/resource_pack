@@ -52,7 +52,7 @@ jobs:
           name: ${{ steps.archive.outputs.name }}
           path: ${{ steps.archive.outputs.path }}
           host: ${{ secrets.FTP_HOST }}
-          port: 21
+          port: 22
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           secure: false
