@@ -17,7 +17,7 @@ jobs:
         with:
           tag_name: "v1.0.0"
           release_name: "ProjectBW_Fonts"
-          draft: true
+          draft: false
           prerelease: false
 
       - uses: ksm2/archive-action@v1
