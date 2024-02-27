@@ -20,12 +20,20 @@ jobs:
           draft: false
           prerelease: false
 
-      - uses: ksm2/archive-action@v1
+#      - uses: ksm2/archive-action@v1
+#        id: archive
+#        with:
+#          format: "zip"
+#          name: ProjectBW_Fonts
+#          include: "**/*.(ts|js|css|html)"
+#          
+      - name: Archive Release
+        uses: thedoctor0/zip-release@0.7.5
         id: archive
         with:
-          format: "zip"
-          name: ProjectBW_Fonts
-          include: "**/*.(ts|js|css|html)"
+          type: 'zip'
+          filename: 'ProjectBW_Fonts.zip'
+          exclusions: '*.git* /*node_modules/* .editorconfig'          
 
       - uses: actions/upload-release-asset@v1.0.1
         env:
