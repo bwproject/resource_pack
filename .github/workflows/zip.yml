@@ -27,7 +27,6 @@ jobs:
 #          name: ProjectBW_Fonts
 #          include: "**/*.(ts|js|css|html)"
 #          
-      - name: Archive Release
         uses: thedoctor0/zip-release@0.7.5
         id: archive
         with:
