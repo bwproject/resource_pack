@@ -27,7 +27,18 @@ jobs:
           format: "zip"
           name: ProjectBW_Fonts
 #          include: "**/*.(ts|js|css|html)"
-                  
+
+      - uses: sokuhatiku/ftp-upload-artifact@v1
+        with:
+          name: my-artifact
+          path: path/to/artifact/ProjectBW_Fonts.zip
+          host: ${{ secrets.FTP_HOST }}
+          port: 21
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          secure: false
+          remote-path: ${{ secrets.FTP_PATH }}
+                 
       - uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
