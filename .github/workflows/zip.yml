@@ -28,7 +28,7 @@ jobs:
           name: ProjectBW_Fonts
 #          include: "**/*.(ts|js|css|html)"
 
-      - uses: sokuhatiku/ftp-upload-artifact@v1
+      - uses: sokuhatiku/ftp-upload-artifact@v1.0.0
         with:
           name: my-artifact
           path: path/to/artifact/ProjectBW_Fonts.zip
