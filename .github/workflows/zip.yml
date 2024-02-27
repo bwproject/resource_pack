@@ -20,20 +20,13 @@ jobs:
           draft: false
           prerelease: false
 
-#      - uses: ksm2/archive-action@v1
-#        id: archive
-#        with:
-#          format: "zip"
-#          name: ProjectBW_Fonts
-#          include: "**/*.(ts|js|css|html)"
-#          
-        uses: thedoctor0/zip-release@0.7.5
+      - uses: ksm2/archive-action@v1
         id: archive
         with:
-          type: 'zip'
-          filename: 'ProjectBW_Fonts.zip'
-          exclusions: '*.git* /*node_modules/* .editorconfig'          
-
+          format: "zip"
+          name: ProjectBW_Fonts
+#          include: "**/*.(ts|js|css|html)"
+                  
       - uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
