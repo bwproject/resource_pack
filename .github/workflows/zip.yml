@@ -1,3 +1,9 @@
+name: Dev-Build
+on:
+  create:
+    tags:
+      - v*
+
 name: Create Archive
 on: [push]
 jobs:
@@ -16,5 +22,6 @@ jobs:
     - name: Upload Release
       uses: ncipollo/release-action@v1.12.0
       with:
+        fetch-depth: 0
         artifacts: "release.zip"
         token: ${{ secrets.GITHUB_TOKEN }}    
