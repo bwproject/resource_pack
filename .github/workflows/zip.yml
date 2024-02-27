@@ -23,6 +23,7 @@ jobs:
       - uses: ksm2/archive-action@v1
         id: archive
         with:
+          root-directory: resource_pack  
           format: "zip"
           name: ProjectBW_Fonts
 #          include: "**/*.(ts|js|css|html)"
