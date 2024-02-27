@@ -1,6 +1,5 @@
 name: Create Resource Pack
 on: [push]
-
 #on:
 #  push:
 #    # Sequence of patterns matched against refs/tags
