@@ -1,9 +1,3 @@
-name: Dev-Build
-on:
-  create:
-    tags:
-      - v*
-
 name: Create Archive
 on: [push]
 jobs:
