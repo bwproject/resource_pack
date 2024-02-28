@@ -47,13 +47,19 @@ jobs:
           asset_name: ${{ steps.archive.outputs.name }}
           asset_content_type: ${{ steps.archive.outputs.media-type }}
 
+- name: GitHub Name example
+        run: |
+          echo "Tag ${{ steps.archive.outputs.name }}"
+          echo "Tag ${{ steps.archive.outputs.path }}"
+
       - uses: sokuhatiku/ftp-upload-artifact@v1.0.0
         with:
+          if-no-files-found: error
           name: ${{ steps.archive.outputs.name }}
           path: ${{ steps.archive.outputs.path }}
           host: ${{ secrets.FTP_HOST }}
           port: 22
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          secure: false
+          secure: true
           remote-path: ${{ secrets.FTP_PATH }}
