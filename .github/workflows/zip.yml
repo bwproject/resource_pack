@@ -82,7 +82,7 @@ jobs:
           #local-dir: ${{ steps.archive.outputs.path }}/
           local-dir: './upload/'
           server-dir: ${{ secrets.FTP_PATH }}/
-          protocol: ftps-legacy
+          protocol: ftp
           security: loose
           log-level: verbose
           port: 21 # todo replace with your web hosts ftps port
