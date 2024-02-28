@@ -43,8 +43,9 @@ jobs:
         with:
           root-directory: resource_pack  
           format: "zip"
-          name: ProjectBW_Fonts
-          path: /upload/ProjectBW_Fonts.zip
+          name: "ProjectBW_Fonts"
+          path: upload "/upload/ProjectBW_Fonts.zip"
+          media-type: "application/zip"
 
       - uses: ksm2/archive-action@v1
         id: archive
