@@ -79,7 +79,7 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ${{ steps.archive.outputs.path }}
+          local-dir: ${{ steps.archive.outputs.path }}/
           server-dir: ${{ secrets.FTP_PATH }}
           protocol: ftps
           log-level: verbose
