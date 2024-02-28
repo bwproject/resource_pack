@@ -81,7 +81,8 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           #local-dir: ${{ steps.archive.outputs.path }}/
           local-dir: './upload/'
-          server-dir: ${{ secrets.FTP_PATH }}/
+          #server-dir: ${{ secrets.FTP_PATH }}/
+          server-dir: /var/lib/pterodactyl/volumes/8eca4a8a-9337-4709-87f6-9a622d31795f/plugins/forcepack/packs/
           protocol: ftp
           security: loose
           log-level: verbose
