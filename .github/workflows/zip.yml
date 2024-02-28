@@ -83,5 +83,6 @@ jobs:
           local-dir: './upload/'
           server-dir: ${{ secrets.FTP_PATH }}/
           protocol: ftp
+          security: loose
           log-level: verbose
           port: 22 # todo replace with your web hosts ftps port
