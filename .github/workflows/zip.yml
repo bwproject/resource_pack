@@ -15,8 +15,16 @@ jobs:
     
       - name: GitHub Tag Name example
         run: |
-          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+          echo "======================================================"
+          echo "github.ref_name: ${{  github.ref_name }}"
+          echo "======================================================"
+          echo "github.run_id: ${{  github.run_id }}"
+          echo "======================================================"
+          echo "github.run_number: ${{  github.run_number }}"
+          echo "======================================================"
+          echo "github.run_attempt: ${{  github.run_attempt }}"
+          echo "======================================================"
+          
          
       - uses: actions/checkout@v3
 
