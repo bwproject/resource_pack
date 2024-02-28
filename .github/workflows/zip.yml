@@ -52,24 +52,36 @@ jobs:
            echo "Tag ${{ steps.archive.outputs.name }}"
            echo "Tag ${{ steps.archive.outputs.path }}"
 
-      - uses: sokuhatiku/ftp-upload-artifact@v1.0.0
-        id: upload
-        with:
-          if-no-files-found: error
+      #- uses: sokuhatiku/ftp-upload-artifact@v1.0.0
+        #id: upload
+        #with:
+          #if-no-files-found: error
           #name: ${{ steps.archive.outputs.name }}
-          path: ${{ steps.archive.outputs.path }}
-          host: ${{ secrets.FTP_HOST }}
-          port: 22
+          #path: ${{ steps.archive.outputs.path }}
+          #host: ${{ secrets.FTP_HOST }}
+          #port: 22
+          #username: ${{ secrets.FTP_USERNAME }}
+          #password: ${{ secrets.FTP_PASSWORD }}
+          #secure: false
+          #remote-path: ${{ secrets.FTP_PATH }}
+      
+      #- uses: Creepios/sftp-action@v1.0.3
+        #with:
+          #host: '${{ secrets.FTP_HOST }}'
+          #port: 22
+          #username: '${{ secrets.FTP_USERNAME }}'
+          #password: '${{ secrets.FTP_PASSWORD }}'
+          #localPath: '${{ steps.archive.outputs.path }}'
+          #remotePath: '${{ secrets.FTP_PATH }}'
+
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          secure: false
-          remote-path: ${{ secrets.FTP_PATH }}
-      
-      - uses: Creepios/sftp-action@v1.0.3
-        with:
-          host: '${{ secrets.FTP_HOST }}'
-          port: 22
-          username: '${{ secrets.FTP_USERNAME }}'
-          password: '${{ secrets.FTP_PASSWORD }}'
-          localPath: '${{ steps.archive.outputs.path }}'
-          remotePath: '${{ secrets.FTP_PATH }}'
+          local-dir: ${{ steps.archive.outputs.path }}
+          server-dir: ${{ secrets.FTP_PATH }}
+          protocol: ftps
+          log-level: verbose
+          port: 22 # todo replace with your web hosts ftps port
