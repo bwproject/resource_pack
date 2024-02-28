@@ -64,6 +64,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           secure: false
           remote-path: ${{ secrets.FTP_PATH }}
+      
       - uses: Creepios/sftp-action@v1.0.3
         with:
           host: '${{ secrets.FTP_HOST }}'
