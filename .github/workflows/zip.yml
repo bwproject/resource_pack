@@ -1,4 +1,4 @@
-name: Create Resource Pack
+name: Create Resource Pack BW
 on: [push]
 #on:
 #  push:
