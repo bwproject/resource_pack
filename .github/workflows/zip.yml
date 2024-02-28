@@ -33,10 +33,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.run_id }}
+          tag_name: ${{ github.run_number }}
           release_name: "ProjectBW_Fonts"
           draft: false
           prerelease: false
+
+      - uses: ksm2/archive-action@v1
+        id: archive2
+        with:
+          root-directory: resource_pack  
+          format: "zip"
+          name: ProjectBW_Fonts
+          path: /upload/ProjectBW_Fonts.zip
 
       - uses: ksm2/archive-action@v1
         id: archive
@@ -44,7 +52,6 @@ jobs:
           root-directory: resource_pack  
           format: "zip"
           name: ProjectBW_Fonts
-#          include: "**/*.(ts|js|css|html)"
                 
       - uses: actions/upload-release-asset@v1.0.1
         env:
@@ -54,11 +61,6 @@ jobs:
           asset_path: ${{ steps.archive.outputs.path }}
           asset_name: ${{ steps.archive.outputs.name }}
           asset_content_type: ${{ steps.archive.outputs.media-type }}
-
-      - name: GitHub Name example
-        run: |
-           echo "Tag ${{ steps.archive.outputs.name }}"
-           echo "Tag ${{ steps.archive.outputs.path }}"
 
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
