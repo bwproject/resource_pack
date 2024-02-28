@@ -47,10 +47,10 @@ jobs:
           asset_name: ${{ steps.archive.outputs.name }}
           asset_content_type: ${{ steps.archive.outputs.media-type }}
 
-- name: GitHub Name example
+      - name: GitHub Name example
         run: |
-          echo "Tag ${{ steps.archive.outputs.name }}"
-          echo "Tag ${{ steps.archive.outputs.path }}"
+           echo "Tag ${{ steps.archive.outputs.name }}"
+           echo "Tag ${{ steps.archive.outputs.path }}"
 
       - uses: sokuhatiku/ftp-upload-artifact@v1.0.0
         with:
