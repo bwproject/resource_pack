@@ -2,7 +2,7 @@
     "providers": [
         {
             "type": "bitmap",
-            "file": "minecraft:font/logo_bw.png",
+            "file": "projectbw:font/logo/logo_bw.png",
             "ascent": 5,
             "height": 30,
             "chars": [
@@ -11,7 +11,7 @@
         },
         {
             "type": "bitmap",
-            "file": "minecraft:font/logo_bw2.png",
+            "file": "projectbw:font/logo/logo_bw2.png",
             "ascent": 5,
             "height": 30,
             "chars": [
@@ -20,7 +20,7 @@
         },		
         {
             "type": "bitmap",
-            "file": "minecraft:font/01.png",
+            "file": "projectbw:font/prefix/01.png",
             "ascent": 7,
             "height": 7,
             "chars": [
@@ -29,7 +29,7 @@
         },
         {
             "type": "bitmap",
-            "file": "minecraft:font/02.png",
+            "file": "projectbw:font/prefix/02.png",
             "ascent": 7,
             "height": 7,
             "chars": [
@@ -38,7 +38,7 @@
         },
         {
             "type": "bitmap",
-            "file": "minecraft:font/03.png",
+            "file": "projectbw:font/prefix/03.png",
             "ascent": 7,
             "height": 7,
             "chars": [
@@ -47,7 +47,7 @@
         },
         {
             "type": "bitmap",
-            "file": "minecraft:font/04.png",
+            "file": "projectbw:font/prefix/04.png",
             "ascent": 7,
             "height": 7,
             "chars": [
@@ -56,7 +56,7 @@
         },
         {
             "type": "bitmap",
-            "file": "minecraft:font/05.png",
+            "file": "projectbw:font/prefix/05.png",
             "ascent": 7,
             "height": 7,
             "chars": [
@@ -65,7 +65,7 @@
         },
 		{
             "type": "bitmap",
-            "file": "minecraft:font/06.png",
+            "file": "projectbw:font/prefix/06.png",
             "ascent": 7,
             "height": 7,
             "chars": [
@@ -74,7 +74,7 @@
         },
 		{
             "type": "bitmap",
-            "file": "minecraft:font/07.png",
+            "file": "projectbw:font/prefix/07.png",
             "ascent": 7,
             "height": 7,
             "chars": [
@@ -83,7 +83,7 @@
         },					
         {
             "type": "bitmap",
-            "file": "minecraft:font/08.png",
+            "file": "projectbw:font/prefix/08.png",
             "ascent": 7,
             "height": 7,
             "chars": [
