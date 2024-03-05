@@ -1,5 +1,7 @@
 # resource_pack
 RP ДЛЯ СЕРВЕРА MC.PROJECTBW.RU
 
+## ЗАМЕНА ПРЕФИКСОВ
 
-я заебался :c
+АДМИН
+![admin](assets/minecraft/textures/font/08.png)
