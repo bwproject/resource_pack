@@ -38,7 +38,7 @@ jobs:
         with:
           root-directory: resource_pack  
           format: "zip"
-          name: ProjectBW_Fonts
+          name: ProjectBW
                 
       - uses: actions/upload-release-asset@v1.0.1
         env:
@@ -52,7 +52,7 @@ jobs:
       - uses: robinraju/release-downloader@v1.9
         with:
           latest: true
-          fileName: "ProjectBW_Fonts.zip"
+          fileName: "ProjectBW.zip"
           out-file-path: "upload"
 
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
