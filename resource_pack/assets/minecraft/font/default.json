@@ -17,6 +17,15 @@
             "chars": [
                     "\u00C7"
                 ]
+        },
+        {
+            "type": "bitmap",
+            "file": "projectbw:font/coin/bwcoin.png",
+            "ascent": 8,
+            "height": 9,
+            "chars": [
+                    "\u00DF"
+                ]
         },		
         {
             "type": "bitmap",
