@@ -36,9 +36,9 @@ jobs:
       - uses: ksm2/archive-action@v1
         id: archive
         with:
-          root-directory: resource_pack  
+          root-directory: resource_pack/mc.projectbw.ru
           format: "zip"
-          name: ProjectBW
+          name: MC-ProjectBW-RU
                 
       - uses: actions/upload-release-asset@v1.0.1
         env:
@@ -52,7 +52,7 @@ jobs:
       - uses: robinraju/release-downloader@v1.9
         with:
           latest: true
-          fileName: "ProjectBW.zip"
+          fileName: "MC-ProjectBW-RU.zip"
           out-file-path: "upload"
 
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -63,7 +63,7 @@ jobs:
           #local-dir: ${{ steps.archive.outputs.path }}/
           local-dir: '/home/runner/work/resource_pack/resource_pack/upload/'
           #server-dir: ${{ secrets.FTP_PATH }}/
-          server-dir: /var/lib/pterodactyl/volumes/8eca4a8a-9337-4709-87f6-9a622d31795f/plugins/forcepack/packs/
+          server-dir: /hdd/pterodactyl/volumes/8eca4a8a-9337-4709-87f6-9a622d31795f/plugins/forcepack/packs/
           protocol: ftp
           security: loose
           log-level: verbose
