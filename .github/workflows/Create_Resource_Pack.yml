@@ -2,12 +2,7 @@ name: Create Resource Pack BW v1
 on: [push]
 jobs:
   build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        root-directory: [ "resource_packs/mc.projectbw.ru", "resource_packs/sb.projectbw.ru" ]
-        name: [ "MC.PROJECTBW.RU", "SB.PROJECTBW.RU" ]
-        
+    runs-on: ubuntu-latest       
     permissions:
       contents: write
     
