@@ -32,7 +32,9 @@ jobs:
           release_name: "ProjectBW_Fonts"
           draft: false
           prerelease: false
-          
+ 
+## 1
+ 
       - uses: ksm2/archive-action@v1
         id: archive
         with:
@@ -53,6 +55,45 @@ jobs:
         with:
           latest: true
           fileName: "MC-ProjectBW-RU.zip"
+          out-file-path: "upload"
+
+      - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          #local-dir: ${{ steps.archive.outputs.path }}/
+          local-dir: '/home/runner/work/resource_pack/resource_pack/upload/'
+          #server-dir: ${{ secrets.FTP_PATH }}/
+          server-dir: /hdd/pterodactyl/volumes/8eca4a8a-9337-4709-87f6-9a622d31795f/plugins/forcepack/packs/
+          protocol: ftp
+          security: loose
+          log-level: verbose
+          port: 21 # todo replace with your web hosts ftps port
+
+
+## 2
+
+      - uses: ksm2/archive-action@v1
+        id: archive
+        with:
+          root-directory: resource_pack/sb.projectbw.ru
+          format: "zip"
+          name: SB-ProjectBW-RU
+                
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.archive.outputs.path }}
+          asset_name: ${{ steps.archive.outputs.name }}
+          asset_content_type: ${{ steps.archive.outputs.media-type }}
+
+      - uses: robinraju/release-downloader@v1.9
+        with:
+          latest: true
+          fileName: "SB-ProjectBW-RU.zip"
           out-file-path: "upload"
 
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
