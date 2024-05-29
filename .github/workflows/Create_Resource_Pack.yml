@@ -48,9 +48,9 @@ jobs:
       - uses: ksm2/archive-action@v1
         id: archive
         with:
-          root-directory: ${{ matrix.root-directory }}
+          root-directory: resource_packs/mc.projectbw.ru
           format: "zip"
-          name: ${{ matrix.name }}
+          name: MC.PROJECTBW.RU
       
       - uses: actions/upload-release-asset@v1.0.1
         id: release
