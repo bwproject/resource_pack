@@ -61,22 +61,6 @@ jobs:
           echo "ГЕНЕРАТОР ТЕКСТУР SB.PROJECTBW.RU"
           echo "======================================================" 
 
-      - uses: ksm2/archive-action@v1
-        id: archive2
-        with:
-          root-directory: resource_packs/sb.projectbw.ru
-          format: "zip"
-          name: SB.PROJECTBW.RU
-                   
-      - uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.archive.outputs.path }}
-          asset_name: ${{ steps.archive.outputs.name }}
-          asset_content_type: ${{ steps.archive.outputs.media-type }}
-
       - name: UPLOAD MC.PROJECTBW.RU
         run: |
           echo "======================================================"
