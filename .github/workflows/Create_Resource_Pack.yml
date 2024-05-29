@@ -68,10 +68,42 @@ jobs:
           asset_name: ${{ steps.archive.outputs.name }}
           asset_content_type: ${{ steps.archive.outputs.media-type }}
 
+      - name: UPLOAD MC.PROJECTBW.RU
+        run: |
+          echo "======================================================"
+          echo "ЗАГРУЗКА ТЕКСТУР MC.PROJECTBW.RU"
+          echo "======================================================" 
+
       - uses: robinraju/release-downloader@v1.9
         with:
           latest: true
           fileName: "MC.PROJECTBW.RU.zip"
+          out-file-path: "upload"
+
+      - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          #local-dir: ${{ steps.archive.outputs.path }}/
+          local-dir: '/home/runner/work/resource_pack/resource_pack/upload/'
+          #server-dir: ${{ secrets.FTP_PATH }}/
+          server-dir: /hdd/pterodactyl/volumes/8eca4a8a-9337-4709-87f6-9a622d31795f/plugins/forcepack/packs/
+          protocol: ftp
+          security: loose
+          log-level: verbose
+          port: 21 # todo replace with your web hosts ftps port
+
+      - name: UPLOAD SB.PROJECTBW.RU
+        run: |
+          echo "======================================================"
+          echo "ЗАГРУЗКА ТЕКСТУР SB.PROJECTBW.RU"
+          echo "======================================================" 
+
+      - uses: robinraju/release-downloader@v1.9
+        with:
+          latest: true
+          fileName: "SB.PROJECTBW.RU.zip"
           out-file-path: "upload"
 
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
