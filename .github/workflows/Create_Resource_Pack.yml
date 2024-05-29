@@ -33,12 +33,31 @@ jobs:
           draft: false
           prerelease: false
  
+      - name: RC MC.PROJECTBW.RU
+        run: |
+          echo "======================================================"
+          echo "ГЕНЕРАТОР ТЕКСТУР MC.PROJECTBW.RU"
+          echo "======================================================" 
+ 
       - uses: ksm2/archive-action@v1
         id: archive
         with:
           root-directory: resource_packs/mc.projectbw.ru
           format: "zip"
           name: MC.PROJECTBW.RU
+
+      - name: RC SB.PROJECTBW.RU
+        run: |
+          echo "======================================================"
+          echo "ГЕНЕРАТОР ТЕКСТУР SB.PROJECTBW.RU"
+          echo "======================================================" 
+
+      - uses: ksm2/archive-action@v1
+        id: archive
+        with:
+          root-directory: resource_packs/sb.projectbw.ru
+          format: "zip"
+          name: SB.PROJECTBW.RU
                    
       - uses: actions/upload-release-asset@v1.0.1
         env:
