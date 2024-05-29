@@ -40,7 +40,7 @@ jobs:
           echo "======================================================" 
  
       - uses: ksm2/archive-action@v1
-        id: archive
+        id: archive2
         with:
           root-directory: resource_packs/mc.projectbw.ru
           format: "zip"
