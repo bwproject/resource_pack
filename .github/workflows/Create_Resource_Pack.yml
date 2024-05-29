@@ -39,14 +39,7 @@ jobs:
           root-directory: resource_packs/mc.projectbw.ru
           format: "zip"
           name: MC.PROJECTBW.RU
-    
-      - uses: ksm2/archive-action@v1
-        id: archive
-        with:
-          root-directory: resource_packs/sb.projectbw.ru
-          format: "zip"
-          name: SB.PROJECTBW.RU
-                
+                   
       - uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
