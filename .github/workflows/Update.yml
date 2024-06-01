@@ -1,0 +1,21 @@
+name: Push File
+
+on: push
+
+jobs:
+  copy-file:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+      - name: Push generated webpage to another repository
+        uses: nkoppel/push-files-to-another-repository@v1.1.3
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-files: 'resource_packs/mc.projectbw.ru/'
+          destination-username: 'bwproject'
+          destination-repository: 'bwproject.github.io'
+          destination-directory: 'RP_MC.PROJECTBW.RU/resource_packs/mc.projectbw.ru/'
+          commit-email: 'bwgit@projectbw.ru'
