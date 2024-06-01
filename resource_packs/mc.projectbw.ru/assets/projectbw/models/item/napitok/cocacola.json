@@ -1,7 +1,0 @@
-{
-  "credit": "projectbw.ru",	
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "projectbw:item/napitok/cocacola"
-  }
-}
