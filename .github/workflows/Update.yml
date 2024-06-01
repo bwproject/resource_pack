@@ -19,4 +19,4 @@ jobs:
         destination_folder: 'resource_packs/mc.projectbw.ru/'
         user_email: 'bwgit@projectbw.ru'
         user_name: 'bwproject'
-        commit_message: 'A custom message for the commit'          
+        commit_message: 'update 1'          
