@@ -43,9 +43,9 @@ jobs:
       - uses: ksm2/archive-action@v1
         id: archive
         with:
-          root-directory: resource_packs/mc.projectbw.ru
+          root-directory: resource_packs/sb.projectbw.ru
           format: "zip"
-          name: MC.PROJECTBW.RU
+          name: SB.PROJECTBW.RU
       
       - uses: actions/upload-release-asset@v1.0.1
         id: release
@@ -59,7 +59,7 @@ jobs:
         
 ##########################################
 
-      - name: UPLOAD MC.PROJECTBW.RU
+      - name: UPLOAD SB.PROJECTBW.RU
         run: |
           echo "======================================================"
           echo "ЗАГРУЗКА ТЕКСТУР MC.PROJECTBW.RU"
@@ -68,7 +68,7 @@ jobs:
       - uses: robinraju/release-downloader@v1.9
         with:
           latest: true
-          fileName: "MC.PROJECTBW.RU.zip"
+          fileName: "SB.PROJECTBW.RU.zip"
           out-file-path: "upload"
 
       - uses: SamKirkland/FTP-Deploy-Action@v4.3.4
