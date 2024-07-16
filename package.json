@@ -1,0 +1,7 @@
+// package.json
+
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && vite build --ssr",
+    "deploy": "node .cpanel-ci.js"
+  }
