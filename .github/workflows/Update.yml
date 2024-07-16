@@ -19,7 +19,7 @@ jobs:
         destination_folder: 'resource_packs/'
         user_email: 'bwgit@projectbw.ru'
         user_name: 'bwproject'
-        commit_message: 'update'  
+        commit_message: 'update MC'  
 
     - name: Pushes SB.PROJECTBW.RU
       uses: dmnemec/copy_file_to_another_repo_action@main
@@ -31,4 +31,16 @@ jobs:
         destination_folder: 'resource_packs/'
         user_email: 'bwgit@projectbw.ru'
         user_name: 'bwproject'
-        commit_message: 'update 1'         
+        commit_message: 'update SB'  
+
+    - name: Pushes RC.PROJECTBW.RU
+      uses: dmnemec/copy_file_to_another_repo_action@main
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.GLOBAL_API_TOKEN_GITHUB }}
+      with:
+        source_file: 'resource_packs/rc.projectbw.ru/'
+        destination_repo: 'bwproject/RP_RC.PROJECTBW.RU'
+        destination_folder: 'resource_packs/'
+        user_email: 'bwgit@projectbw.ru'
+        user_name: 'bwproject'
+        commit_message: 'update RC'         
