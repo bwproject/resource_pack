@@ -26,4 +26,13 @@ jobs:
           files: archives/*.zip
           body: "Автоматическая сборка ресурсов"
           draft: false
-          prerelease: false       
+          prerelease: false
+
+      - name: Upload files via SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.GLOBAL_FTP_HOST }}
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
+          source: "archives/*.zip"
+          target: "/path/to/upload/directory"     
