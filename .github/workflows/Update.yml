@@ -1,9 +1,10 @@
+# Ресурсы для сервера
 name: Build, Release, and Upload to Server
 
 on:
   push:
     branches:
-      - main  # Запуск при пуше в основную ветку
+      - main  # Запуск при пуше в основную ветку 
 
 jobs:
   build:
