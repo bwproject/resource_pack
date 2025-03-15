@@ -1,46 +1,29 @@
-name: Push File
+name: Build and Release Resource Packs
 
 on: push
 
 jobs:
-  copy-file:
+  build:
+    name: Archive and Upload Resource Packs
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Pushes MC.PROJECTBW.RU
-      uses: dmnemec/copy_file_to_another_repo_action@main
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.GLOBAL_API_TOKEN_GITHUB }}
-      with:
-        source_file: 'resource_packs/mc.projectbw.ru/'
-        destination_repo: 'bwproject/RP_MC.PROJECTBW.RU'
-        destination_folder: 'resource_packs/'
-        user_email: 'bwgit@projectbw.ru'
-        user_name: 'bwproject'
-        commit_message: 'update MC'  
+      - name: Create archives
+        run: |
+          mkdir -p archives
+          zip -r archives/mc.projectbw.ru.zip resource_packs/mc.projectbw.ru
+          zip -r archives/rc.projectbw.ru.zip resource_packs/rc.projectbw.ru
+          zip -r archives/sb.projectbw.ru.zip resource_packs/sb.projectbw.ru
+          zip -r archives/mg.projectbw.ru.zip resource_packs/mg.projectbw.ru
 
-    - name: Pushes SB.PROJECTBW.RU
-      uses: dmnemec/copy_file_to_another_repo_action@main
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.GLOBAL_API_TOKEN_GITHUB }}
-      with:
-        source_file: 'resource_packs/sb.projectbw.ru/'
-        destination_repo: 'bwproject/RP_SB.PROJECTBW.RU'
-        destination_folder: 'resource_packs/'
-        user_email: 'bwgit@projectbw.ru'
-        user_name: 'bwproject'
-        commit_message: 'update SB'  
-
-    - name: Pushes RC.PROJECTBW.RU
-      uses: dmnemec/copy_file_to_another_repo_action@main
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.GLOBAL_API_TOKEN_GITHUB }}
-      with:
-        source_file: 'resource_packs/rc.projectbw.ru/'
-        destination_repo: 'bwproject/RP_RC.PROJECTBW.RU'
-        destination_folder: 'resource_packs/'
-        user_email: 'bwgit@projectbw.ru'
-        user_name: 'bwproject'
-        commit_message: 'update RC'         
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: archives/*.zip
+          body: "Автоматическая сборка ресурсов"
+          draft: false
+          prerelease: false       
