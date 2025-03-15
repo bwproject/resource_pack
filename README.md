@@ -1,6 +1,8 @@
 # resource_pack
 RP ДЛЯ СЕРВЕРА MC.PROJECTBW.RU
 
+На нашем сервере используюься свои ресурспаки для более интересной игры
+
 ## ЗАМЕНА ЛОГО СЕРВЕРА
 
 ![/assets/projectbw/textures/font/logo/logo_bw.png](https://github.com/bwproject/resource_pack/blob/main/resource_packs/mc.projectbw.ru/assets/projectbw/textures/font/logo/logo_bw.png)
