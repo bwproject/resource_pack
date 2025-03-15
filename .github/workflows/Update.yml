@@ -12,42 +12,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Шаг 1: Клонируем репозиторий
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Шаг 2: Генерируем тег для релиза и пушим его в репозиторий
       - name: Generate tag and push it
         run: |
-          TAG_NAME="v$(date +'%Y%m%d-%H%M%S')"
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git tag $TAG_NAME
-          git push origin $TAG_NAME
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          TAG_NAME="v$(date +'%Y%m%d-%H%M%S')"  # Генерация тега на основе текущей даты и времени
+          git config --global user.name "github-actions[bot]"  # Настройка имени пользователя для git
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"  # Настройка email пользователя для git
+          git tag $TAG_NAME  # Создание тега
+          git push origin $TAG_NAME  # Пуш тега в репозиторий
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV  # Запись тега в переменную окружения
 
+      # Шаг 3: Создание архивов для каждого ресурса
       - name: Create archives
         run: |
-          mkdir -p archives
-          zip -r archives/MC.PROJECTBW.RU.zip resource_packs/mc.projectbw.ru
-          zip -r archives/RC.PROJECTBW.RU.zip resource_packs/rc.projectbw.ru
-          zip -r archives/SB.PROJECTBW.RU.zip resource_packs/sb.projectbw.ru
-          zip -r archives/MG.PROJECTBW.RU.zip resource_packs/mg.projectbw.ru
+          mkdir -p archives  # Создаем папку для хранения архивов
+          zip -r archives/MC.PROJECTBW.RU.zip resource_packs/mc.projectbw.ru  # Архивируем ресурсы mc.projectbw.ru
+          zip -r archives/RC.PROJECTBW.RU.zip resource_packs/rc.projectbw.ru  # Архивируем ресурсы rc.projectbw.ru
+          zip -r archives/SB.PROJECTBW.RU.zip resource_packs/sb.projectbw.ru  # Архивируем ресурсы sb.projectbw.ru
+          zip -r archives/MG.PROJECTBW.RU.zip resource_packs/mg.projectbw.ru  # Архивируем ресурсы mg.projectbw.ru
 
+      # Шаг 4: Создание релиза на GitHub
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2  # Используем action для создания релиза на GitHub
         with:
-          tag_name: ${{ env.TAG_NAME }}
-          files: archives/*.zip
-          body: "Автоматическая сборка ресурсов"
-          draft: false
-          prerelease: false
+          tag_name: ${{ env.TAG_NAME }}  # Указываем тег релиза
+          files: archives/*.zip  # Загружаем все архивы в релиз
+          body: "Автоматическая сборка ресурсов"  # Описание релиза
+          draft: false  # Устанавливаем, что релиз не черновик
+          prerelease: false  # Устанавливаем, что релиз не является предварительным
 
+      # Шаг 5: Загрузка архивов на сервер по SSH
       - name: Upload files via SSH
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@v0.1.7  # Используем SCP для загрузки файлов на сервер
         with:
-          host: ${{ secrets.GLOBAL_FTP_HOST }}
-          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
-          source: "archives/*.zip"
-          target: "${{ secrets.GLOBAL_FTP_PATH }}"
-          strip_components: 1  # Убирает лишние пути, чтобы файлы не оказывались в subdir
+          host: ${{ secrets.GLOBAL_FTP_HOST }}  # Хост для подключения
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}  # Имя пользователя для подключения
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}  # Пароль для подключения
+          source: "archives/*.zip"  # Источник файлов для загрузки
+          target: "${{ secrets.GLOBAL_FTP_PATH }}"  # Целевая директория на сервере
+          overwrite: true  # Перезаписываем существующие файлы на сервере
+          strip_components: 1  # Убираем лишние пути из архивов, чтобы файлы не оказались в подкаталогах
