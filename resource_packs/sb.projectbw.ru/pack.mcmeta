@@ -1,1 +1,6 @@
-{"pack":{"pack_format":9,"description":"§9§lPROJECTBW §8| §7ИГРАЙ §7mc§8.§7projectbw§8.§7ru"}}
+{
+  "pack": {
+    "pack_format": {"min_inclusive": 15, "max_inclusive": 62},
+    "description": "§a§lIP: MC.PROJECTBW.RU\n§c§lwiki.projectbw.ru/rp"
+  }
+}

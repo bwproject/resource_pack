@@ -1,6 +1,6 @@
 {
   "pack": {
-    "pack_format": 45,
-    "description": "§a§lIP: RC.PROJECTBW.RU\n§c§lRecreation"
+    "pack_format": {"min_inclusive": 15, "max_inclusive": 62},
+    "description": "§a§lIP: MC.PROJECTBW.RU\n§c§lwiki.projectbw.ru/rp"
   }
 }
