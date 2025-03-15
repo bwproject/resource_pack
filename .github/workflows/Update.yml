@@ -3,7 +3,7 @@ name: Build, Release, and Upload to Server
 on:
   push:
     branches:
-      - main  # Запуск при пуше в основную ветку (можно изменить)
+      - main  # Запуск при пуше в основную ветку
 
 jobs:
   build:
@@ -48,4 +48,4 @@ jobs:
           username: ${{ secrets.GLOBAL_FTP_USERNAME }}
           password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
           source: "archives/*.zip"
-          target: "/path/to/upload/directory"
+          target: "${{ secrets.GLOBAL_FTP_PATH }}"
