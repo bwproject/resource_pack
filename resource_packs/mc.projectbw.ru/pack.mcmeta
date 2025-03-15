@@ -1,6 +1,10 @@
 {
   "pack": {
-    "pack_format": {"min_inclusive": 15, "max_inclusive": 62},
-    "description": "§a§lIP: MC.PROJECTBW.RU\n§c§lwiki.projectbw.ru/rp"
+    "pack_format": 46,
+    "description": "§a§lIP: MC.PROJECTBW.RU\n§c§lwiki.projectbw.ru/rp",
+    "supported_formats": {
+      "min_inclusive": 46,
+      "max_inclusive": 61
+    }
   }
 }
