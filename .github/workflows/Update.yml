@@ -26,10 +26,10 @@ jobs:
       - name: Create archives
         run: |
           mkdir -p archives
-          zip -r archives/mc.projectbw.ru.zip resource_packs/mc.projectbw.ru
-          zip -r archives/rc.projectbw.ru.zip resource_packs/rc.projectbw.ru
-          zip -r archives/sb.projectbw.ru.zip resource_packs/sb.projectbw.ru
-          zip -r archives/mg.projectbw.ru.zip resource_packs/mg.projectbw.ru
+          zip -r archives/MC.PROJECTBW.RU.zip resource_packs/mc.projectbw.ru
+          zip -r archives/RC.PROJECTBW.RU.zip resource_packs/rc.projectbw.ru
+          zip -r archives/SB.PROJECTBW.RU.zip resource_packs/sb.projectbw.ru
+          zip -r archives/MG.PROJECTBW.RU.zip resource_packs/mg.projectbw.ru
 
       - name: Create GitHub Release
         id: create_release
@@ -49,3 +49,4 @@ jobs:
           password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
           source: "archives/*.zip"
           target: "${{ secrets.GLOBAL_FTP_PATH }}"
+          strip_components: 1  # Убирает лишние пути, чтобы файлы не оказывались в subdir
