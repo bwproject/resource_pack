@@ -1,7 +1,7 @@
 {
   "pack": {
     "pack_format": 48,
-    "description": "§a§lIP: MC.PROJECTBW.RU\n§c§lwiki.projectbw.ru/rp",
+    "description": "§a§lПеревод для сервера ProjectBW",
     "supported_formats": {
       "min_inclusive": 46,
       "max_inclusive": 49

@@ -30,6 +30,7 @@ jobs:
           zip -r archives/RC.PROJECTBW.RU.zip resource_packs/rc.projectbw.ru  # Архивируем ресурсы для rc.projectbw.ru
           zip -r archives/SB.PROJECTBW.RU.zip resource_packs/sb.projectbw.ru  # Архивируем ресурсы для sb.projectbw.ru
           zip -r archives/MG.PROJECTBW.RU.zip resource_packs/mg.projectbw.ru  # Архивируем ресурсы для mg.projectbw.ru
+          zip -r archives/SMP.PROJECTBW.RU.zip resource_packs/smp.projectbw.ru  # Архивируем ресурсы для smp.projectbw.ru
 
       - name: Create GitHub Release
         id: create_release
