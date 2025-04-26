@@ -27,31 +27,32 @@ jobs:
         run: |
           mkdir -p archives  # Создаём папку для архивов
 
-          # Перебираем все папки внутри resource_packs/
+          # Перебираем все подпапки внутри resource_packs/
           for dir in resource_packs/*/; do
-            # Убираем лишние символы в названии
-            dir_name=$(basename "$dir")
-            # Архивируем каждую папку с сохранением структуры
-            zip -r "archives/$(echo $dir_name | awk '{print toupper($0)}').zip" "$dir"
+            dir_name=$(basename "$dir")  # Получаем имя папки, например smp.projectbw.ru
+            archive_name=$(echo "$dir_name" | awk '{print toupper($0)}')  # Преобразуем имя архива в верхний регистр
+
+            # Переходим в папку ресурса и архивируем её содержимое (без вложенной директории)
+            (cd "$dir" && zip -r "../../archives/${archive_name}.zip" .)
           done
 
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2  # Используем action для создания релиза на GitHub
         with:
-          tag_name: ${{ env.TAG_NAME }}
-          files: archives/*.zip
-          body: "Автоматическая сборка ресурсов"
-          draft: false
-          prerelease: false
+          tag_name: ${{ env.TAG_NAME }}  # Используем ранее созданный тег для релиза
+          files: archives/*.zip  # Загружаем все архивы в релиз
+          body: "Автоматическая сборка ресурсов"  # Тело релиза
+          draft: false  # Устанавливаем релиз как готовый для публичного доступа
+          prerelease: false  # Устанавливаем релиз как стабильный
 
       - name: Upload files via SSH
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@v0.1.7  # Используем SCP для загрузки файлов на сервер по SSH
         with:
-          host: ${{ secrets.GLOBAL_FTP_HOST }}
-          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
-          source: "archives/*.zip"
-          target: "${{ secrets.GLOBAL_FTP_PATH }}"
-          strip_components: 1
-          overwrite: true
+          host: ${{ secrets.GLOBAL_FTP_HOST }}  # Хост для подключения по SSH
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}  # Имя пользователя для SSH
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}  # Пароль для SSH
+          source: "archives/*.zip"  # Источник архивов для загрузки
+          target: "${{ secrets.GLOBAL_FTP_PATH }}"  # Целевая папка на сервере
+          strip_components: 1  # Убирает лишние пути, чтобы файлы не оказывались в подкаталоге
+          overwrite: true  # Разрешает перезапись существующих файлов на сервере
