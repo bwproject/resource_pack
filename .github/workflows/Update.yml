@@ -46,6 +46,11 @@ jobs:
           draft: false  # Устанавливаем релиз как готовый для публичного доступа
           prerelease: false  # Устанавливаем релиз как стабильный
 
+      - name: Check DNS resolution and ping
+        run: |
+        nslookup ${{ secrets.GLOBAL_FTP_HOST }}
+        ping -c 3 ${{ secrets.GLOBAL_FTP_HOST }}
+
       - name: Upload files via SSH (rsync)
         uses: appleboy/ssh-action@v1.0.0
         with:
