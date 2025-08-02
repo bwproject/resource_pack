@@ -74,3 +74,35 @@ jobs:
           target: "${{ secrets.GLOBAL_FTP_PATH }}"  # Целевая папка на сервере
           strip_components: 1  # Убирает лишние пути, чтобы файлы не оказывались в подкаталоге
           overwrite: true  # Разрешает перезапись существующих файлов на сервере
+
+      - name: Wait for 15 seconds
+        run: sleep 15
+
+      - name: Remove old archives on server 2
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.GLOBAL_FTP_HOST }}  # Хост сервера SSH
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}  # Логин SSH
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}  # Пароль SSH
+          script: |
+            cd ${{ secrets.GLOBAL_FTP_PATH2 }}  # Переходим в другую директорию с архивами на сервере
+
+            # Удаляем архивы с именами, соответствующими папкам resource_packs
+            for dir in $(ls -1 resource_packs); do
+              archive_name=$(echo "$dir" | tr '[:lower:]' '[:upper:]').zip
+              if [ -f "$archive_name" ]; then
+                echo "Removing old archive $archive_name (2)"
+                rm -f "$archive_name"
+              fi
+            done
+
+      - name: Upload files via SSH 2
+        uses: appleboy/scp-action@v0.1.7  # Используем SCP для загрузки файлов на сервер по SSH
+        with:
+          host: ${{ secrets.GLOBAL_FTP_HOST }}  # Хост для подключения по SSH
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}  # Имя пользователя для SSH
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}  # Пароль для SSH
+          source: "archives/*.zip"  # Источник архивов для загрузки
+          target: "${{ secrets.GLOBAL_FTP_PATH2 }}"  # Целевая папка на сервере (вторая)
+          strip_components: 1  # Убирает лишние пути, чтобы файлы не оказывались в подкаталоге
+          overwrite: true  # Разрешает перезапись существующих файлов на сервере
