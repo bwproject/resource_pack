@@ -3,67 +3,61 @@ name: Build, Release, and Upload to Server
 on:
   push:
     branches:
-      - main  # Запуск при пуше в основную ветку 
+      - main  # Запуск при пуше в основную ветку
 
 jobs:
   build:
     name: Archive and Upload Resource Packs
-    runs-on: ubuntu-latest  # Используем последнюю версию Ubuntu для выполнения шагов
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4  # Клонируем репозиторий для доступа к его содержимому
+        uses: actions/checkout@v4
 
       - name: Generate tag and push it
         run: |
-          TAG_NAME="v$(date +'%Y%m%d-%H%M%S')"  # Генерируем уникальный тег на основе текущей даты и времени
-          git config --global user.name "github-actions[bot]"  # Настройка имени пользователя для создания тега
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"  # Настройка email для тега
-          git tag $TAG_NAME  # Создаём новый тег в репозитории
-          git push origin $TAG_NAME  # Отправляем тег в удалённый репозиторий
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV  # Записываем тег в переменные окружения для дальнейшего использования
+          TAG_NAME="v$(date +'%Y%m%d-%H%M%S')"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
 
       - name: Create archives
         run: |
-          mkdir -p archives  # Создаём папку для архивов
-
-          # Перебираем все подпапки внутри resource_packs/
+          mkdir -p archives
           for dir in resource_packs/*/; do
-            dir_name=$(basename "$dir")  # Получаем имя папки, например smp.projectbw.ru
-            archive_name=$(echo "$dir_name" | awk '{print toupper($0)}')  # Преобразуем имя архива в верхний регистр
-
-            # Переходим в папку ресурса и архивируем её содержимое (без вложенной директории)
+            dir_name=$(basename "$dir")
+            archive_name=$(echo "$dir_name" | awk '{print toupper($0)}')
             (cd "$dir" && zip -r "../../archives/${archive_name}.zip" .)
           done
 
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v2  # Используем action для создания релиза на GitHub
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.TAG_NAME }}  # Используем ранее созданный тег для релиза
-          files: archives/*.zip  # Загружаем все архивы в релиз
-          body: "Автоматическая сборка ресурсов"  # Тело релиза
-          draft: false  # Устанавливаем релиз как готовый для публичного доступа
-          prerelease: false  # Устанавливаем релиз как стабильный
+          tag_name: ${{ env.TAG_NAME }}
+          files: archives/*.zip
+          body: "Автоматическая сборка ресурсов"
+          draft: false
+          prerelease: false
 
-      - name: Upload files via SSH
-        uses: appleboy/scp-action@v0.1.7  # Используем SCP для загрузки файлов на сервер по SSH
+      - name: Upload files via SSH (rsync)
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.GLOBAL_FTP_HOST }}  # Хост для подключения по SSH
-          username: ${{ secrets.GLOBAL_FTP_USERNAME }}  # Имя пользователя для SSH
-          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}  # Пароль для SSH
-          source: "archives/*.zip"  # Источник архивов для загрузки
-          target: "${{ secrets.GLOBAL_FTP_PATH }}"  # Целевая папка на сервере
-          strip_components: 1  # Убирает лишние пути, чтобы файлы не оказывались в подкаталоге
-          overwrite: true  # Разрешает перезапись существующих файлов на сервере
-      
-      - name: Upload files via SSH2
-        uses: appleboy/scp-action@v0.1.7  # Используем SCP для загрузки файлов на сервер по SSH
+          host: ${{ secrets.GLOBAL_FTP_HOST }}
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
+          script: |
+            mkdir -p ${{ secrets.GLOBAL_FTP_PATH }}
+            rsync -avz --progress archives/*.zip ${{ secrets.GLOBAL_FTP_USERNAME }}@${{ secrets.GLOBAL_FTP_HOST }}:${{ secrets.GLOBAL_FTP_PATH }}/
+
+      - name: Upload files via SSH2 (rsync)
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.GLOBAL_FTP_HOST }}  # Хост для подключения по SSH
-          username: ${{ secrets.GLOBAL_FTP_USERNAME }}  # Имя пользователя для SSH
-          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}  # Пароль для SSH
-          source: "archives/*.zip"  # Источник архивов для загрузки
-          target: "${{ secrets.GLOBAL_FTP_PATH2 }}"  # Целевая папка на сервере
-          strip_components: 1  # Убирает лишние пути, чтобы файлы не оказывались в подкаталоге
-          overwrite: true  # Разрешает перезапись существующих файлов на сервере          
+          host: ${{ secrets.GLOBAL_FTP_HOST }}
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
+          script: |
+            mkdir -p ${{ secrets.GLOBAL_FTP_PATH2 }}
+            rsync -avz --progress archives/*.zip ${{ secrets.GLOBAL_FTP_USERNAME }}@${{ secrets.GLOBAL_FTP_HOST }}:${{ secrets.GLOBAL_FTP_PATH2 }}/
