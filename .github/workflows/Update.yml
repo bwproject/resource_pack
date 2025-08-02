@@ -48,8 +48,8 @@ jobs:
 
       - name: Check DNS resolution and ping
         run: |
-        nslookup ${{ secrets.GLOBAL_FTP_HOST }}
-        ping -c 3 ${{ secrets.GLOBAL_FTP_HOST }}
+          nslookup ${{ secrets.GLOBAL_FTP_HOST }}
+          ping -c 3 ${{ secrets.GLOBAL_FTP_HOST }}
 
       - name: Upload files via SSH (rsync)
         uses: appleboy/ssh-action@v1.0.0
@@ -58,8 +58,12 @@ jobs:
           username: ${{ secrets.GLOBAL_FTP_USERNAME }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            mkdir -p ${{ secrets.GLOBAL_FTP_PATH }}
-            rsync -avz --progress -e "ssh -o StrictHostKeyChecking=no" archives/*.zip ${{ secrets.GLOBAL_FTP_USERNAME }}@${{ secrets.GLOBAL_FTP_HOST }}:${{ secrets.GLOBAL_FTP_PATH }}/
+            mkdir -p $GLOBAL_FTP_PATH
+            rsync -avz --progress -e "ssh -o StrictHostKeyChecking=no" archives/*.zip $GLOBAL_FTP_USERNAME@$GLOBAL_FTP_HOST:$GLOBAL_FTP_PATH/
+        env:
+          GLOBAL_FTP_PATH: ${{ secrets.GLOBAL_FTP_PATH }}
+          GLOBAL_FTP_USERNAME: ${{ secrets.GLOBAL_FTP_USERNAME }}
+          GLOBAL_FTP_HOST: ${{ secrets.GLOBAL_FTP_HOST }}
 
       - name: Upload files via SSH2 (rsync)
         uses: appleboy/ssh-action@v1.0.0
@@ -68,5 +72,9 @@ jobs:
           username: ${{ secrets.GLOBAL_FTP_USERNAME }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            mkdir -p ${{ secrets.GLOBAL_FTP_PATH2 }}
-            rsync -avz --progress -e "ssh -o StrictHostKeyChecking=no" archives/*.zip ${{ secrets.GLOBAL_FTP_USERNAME }}@${{ secrets.GLOBAL_FTP_HOST }}:${{ secrets.GLOBAL_FTP_PATH2 }}/
+            mkdir -p $GLOBAL_FTP_PATH2
+            rsync -avz --progress -e "ssh -o StrictHostKeyChecking=no" archives/*.zip $GLOBAL_FTP_USERNAME@$GLOBAL_FTP_HOST:$GLOBAL_FTP_PATH2/
+        env:
+          GLOBAL_FTP_PATH2: ${{ secrets.GLOBAL_FTP_PATH2 }}
+          GLOBAL_FTP_USERNAME: ${{ secrets.GLOBAL_FTP_USERNAME }}
+          GLOBAL_FTP_HOST: ${{ secrets.GLOBAL_FTP_HOST }}
