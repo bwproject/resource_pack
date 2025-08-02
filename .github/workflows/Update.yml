@@ -46,30 +46,31 @@ jobs:
           draft: false  # Устанавливаем релиз как готовый для публичного доступа
           prerelease: false  # Устанавливаем релиз как стабильный
 
-      # Загрузка архивов на первый сервер через SCP
-      - name: Upload files via SSH
-        uses: appleboy/scp-action@v0.1.7
+      - name: Remove old archives on server
+        uses: appleboy/ssh-action@v0.1.9
         with:
-          # Временно отключаем использование секрета хоста для отладки DNS
-          # host: ${{ secrets.GLOBAL_FTP_HOST }}
-          host: ip.projectbw.ru  # Временный прямой хост для проверки соединения
-          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
-          source: "archives/*.zip"
-          target: "${{ secrets.GLOBAL_FTP_PATH }}"
-          strip_components: 1  # Убираем лишние директории при копировании
-          overwrite: true  # Перезаписываем файлы, если они существуют
+          host: ${{ secrets.GLOBAL_FTP_HOST }}  # Хост сервера SSH
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}  # Логин SSH
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}  # Пароль SSH
+          script: |
+            cd ${{ secrets.GLOBAL_FTP_PATH }}  # Переходим в директорию с архивами на сервере
 
-      # Загрузка архивов на второй сервер через SCP
-      - name: Upload files via SSH2
-        uses: appleboy/scp-action@v0.1.7
+            # Удаляем архивы с именами, соответствующими папкам resource_packs
+            for dir in $(ls -1 resource_packs); do
+              archive_name=$(echo "$dir" | tr '[:lower:]' '[:upper:]').zip
+              if [ -f "$archive_name" ]; then
+                echo "Removing old archive $archive_name"
+                rm -f "$archive_name"
+              fi
+            done
+
+      - name: Upload files via SSH
+        uses: appleboy/scp-action@v0.1.7  # Используем SCP для загрузки файлов на сервер по SSH
         with:
-          # Временно отключаем использование секрета хоста для отладки DNS
-          # host: ${{ secrets.GLOBAL_FTP_HOST }}
-          host: ip.projectbw.ru  # Временный прямой хост для проверки соединения
-          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
-          source: "archives/*.zip"
-          target: "${{ secrets.GLOBAL_FTP_PATH2 }}"
-          strip_components: 1
-          overwrite: true
+          host: ${{ secrets.GLOBAL_FTP_HOST }}  # Хост для подключения по SSH
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}  # Имя пользователя для SSH
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}  # Пароль для SSH
+          source: "archives/*.zip"  # Источник архивов для загрузки
+          target: "${{ secrets.GLOBAL_FTP_PATH }}"  # Целевая папка на сервере
+          strip_components: 1  # Убирает лишние пути, чтобы файлы не оказывались в подкаталоге
+          overwrite: true  # Разрешает перезапись существующих файлов на сервере
