@@ -3,116 +3,73 @@ name: Build, Release, and Upload to Server
 on:
   push:
     branches:
-      - main  # Запускать workflow при пуше в ветку main
+      - main  # Запуск при пуше в основную ветку 
 
 jobs:
   build:
     name: Archive and Upload Resource Packs
-    runs-on: ubuntu-latest  # Среда выполнения — последняя версия Ubuntu
+    runs-on: ubuntu-latest  # Используем последнюю версию Ubuntu для выполнения шагов
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4  # Клонируем репозиторий, чтобы получить файлы
+        uses: actions/checkout@v4  # Клонируем репозиторий для доступа к его содержимому
 
       - name: Generate tag and push it
         run: |
-          TAG_NAME="v$(date +'%Y%m%d-%H%M%S')"  # Создаём тег с текущей датой и временем
-          git config --global user.name "github-actions[bot]"  # Настраиваем имя пользователя git
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"  # Настраиваем email
-          git tag $TAG_NAME  # Создаём git-тег
-          git push origin $TAG_NAME  # Отправляем тег в репозиторий
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV  # Сохраняем тег в переменные окружения
+          TAG_NAME="v$(date +'%Y%m%d-%H%M%S')"  # Генерируем уникальный тег на основе текущей даты и времени
+          git config --global user.name "github-actions[bot]"  # Настройка имени пользователя для создания тега
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"  # Настройка email для тега
+          git tag $TAG_NAME  # Создаём новый тег в репозитории
+          git push origin $TAG_NAME  # Отправляем тег в удалённый репозиторий
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV  # Записываем тег в переменные окружения для дальнейшего использования
 
-      - name: Create archives and list
+      - name: Create archives
         run: |
           mkdir -p archives  # Создаём папку для архивов
-          > archives/list.txt  # Очищаем/создаём файл списка архивов
-          
-          # Проходим по каждой подпапке resource_packs и архивируем её содержимое
+
+          # Перебираем все подпапки внутри resource_packs/
           for dir in resource_packs/*/; do
-            dir_name=$(basename "$dir")  # Получаем имя папки
-            archive_name=$(echo "$dir_name" | awk '{print toupper($0)}')  # Имя архива — в верхнем регистре
-            (cd "$dir" && zip -r "../../archives/${archive_name}.zip" .)  # Создаём архив
-            echo "${archive_name}.zip" >> archives/list.txt  # Добавляем имя архива в список
+            dir_name=$(basename "$dir")  # Получаем имя папки, например smp.projectbw.ru
+            archive_name=$(echo "$dir_name" | awk '{print toupper($0)}')  # Преобразуем имя архива в верхний регистр
+
+            # Переходим в папку ресурса и архивируем её содержимое (без вложенной директории)
+            (cd "$dir" && zip -r "../../archives/${archive_name}.zip" .)
           done
 
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v2  # Создаём релиз на GitHub с архивами
+        uses: softprops/action-gh-release@v2  # Используем action для создания релиза на GitHub
         with:
-          tag_name: ${{ env.TAG_NAME }}  # Используем созданный тег
+          tag_name: ${{ env.TAG_NAME }}  # Используем ранее созданный тег для релиза
           files: archives/*.zip  # Загружаем все архивы в релиз
-          body: "Автоматическая сборка ресурсов"  # Текст релиза
-          draft: false  # Релиз публикуется сразу, не черновик
-          prerelease: false  # Релиз не предварительный
+          body: "Автоматическая сборка ресурсов"  # Тело релиза
+          draft: false  # Устанавливаем релиз как готовый для публичного доступа
+          prerelease: false  # Устанавливаем релиз как стабильный
 
-      # ------------------- Работа с сервером 1 -------------------
-
-      - name: Upload archives list to server 1
-        uses: appleboy/scp-action@v0.1.7  # Копируем список архивов на сервер
+      # Загрузка архивов на первый сервер через SCP
+      - name: Upload files via SSH
+        uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.GLOBAL_FTP_HOST }}
-          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
-          source: archives/list.txt  # Локальный файл со списком архивов
-          target: /tmp/list.txt  # Копируем во временную папку на сервере
-
-      - name: Remove old archives on server 1 except BlankPack.zip
-        uses: appleboy/ssh-action@v1.0.0  # Выполняем команду SSH для удаления старых архивов
-        with:
-          host: ${{ secrets.GLOBAL_FTP_HOST }}
-          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
-          script: |
-            cd ${{ secrets.GLOBAL_FTP_PATH }}  # Переходим в целевую директорию
-            # Проходим по списку файлов, удаляя все, кроме BlankPack.zip
-            while IFS= read -r file; do
-              if [ "$file" != "BlankPack.zip" ] && [ -f "$file" ]; then
-                rm "$file"
-              fi
-            done < /tmp/list.txt
-
-      - name: Upload files via SCP (server 1)
-        uses: appleboy/scp-action@v0.1.7  # Загружаем архивы на сервер
-        with:
-          host: ${{ secrets.GLOBAL_FTP_HOST }}
+          # Временно отключаем использование секрета хоста для отладки DNS
+          # host: ${{ secrets.GLOBAL_FTP_HOST }}
+          host: ip.projectbw.ru  # Временный прямой хост для проверки соединения
           username: ${{ secrets.GLOBAL_FTP_USERNAME }}
           password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
           source: "archives/*.zip"
           target: "${{ secrets.GLOBAL_FTP_PATH }}"
-          strip_components: 1  # Загружаем только содержимое архива без вложенных директорий
+          strip_components: 1  # Убираем лишние директории при копировании
+          overwrite: true  # Перезаписываем файлы, если они существуют
 
-      # ------------------- Работа с сервером 2 -------------------
-
-      - name: Upload archives list to server 2
-        uses: appleboy/scp-action@v0.1.7  # Копируем список архивов на второй сервер
+      # Загрузка архивов на второй сервер через SCP
+      - name: Upload files via SSH2
+        uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.GLOBAL_FTP_HOST }}
-          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
-          source: archives/list.txt
-          target: /tmp/list.txt
-
-      - name: Remove old archives on server 2 except BlankPack.zip
-        uses: appleboy/ssh-action@v1.0.0  # Удаляем старые архивы на втором сервере
-        with:
-          host: ${{ secrets.GLOBAL_FTP_HOST }}
-          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
-          script: |
-            cd ${{ secrets.GLOBAL_FTP_PATH2 }}
-            while IFS= read -r file; do
-              if [ "$file" != "BlankPack.zip" ] && [ -f "$file" ]; then
-                rm "$file"
-              fi
-            done < /tmp/list.txt
-
-      - name: Upload files via SCP (server 2)
-        uses: appleboy/scp-action@v0.1.7  # Загружаем архивы на второй сервер
-        with:
-          host: ${{ secrets.GLOBAL_FTP_HOST }}
+          # Временно отключаем использование секрета хоста для отладки DNS
+          # host: ${{ secrets.GLOBAL_FTP_HOST }}
+          host: ip.projectbw.ru  # Временный прямой хост для проверки соединения
           username: ${{ secrets.GLOBAL_FTP_USERNAME }}
           password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
           source: "archives/*.zip"
           target: "${{ secrets.GLOBAL_FTP_PATH2 }}"
           strip_components: 1
+          overwrite: true
