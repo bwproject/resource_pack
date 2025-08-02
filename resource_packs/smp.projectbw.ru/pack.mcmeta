@@ -1,10 +1,10 @@
 {
   "pack": {
-    "pack_format": 49,
+    "pack_format": 64,
     "description": "§a§lПеревод для сервера ProjectBW",
     "supported_formats": {
-      "min_inclusive": 46,
-      "max_inclusive": 49
+      "min_inclusive": 64,
+      "max_inclusive": 64
     }
   }
 }
