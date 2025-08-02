@@ -3,78 +3,79 @@ name: Build, Release, and Upload to Server
 on:
   push:
     branches:
-      - main  # Запуск при пуше в основную ветку 
+      - main
 
 jobs:
   build:
     name: Archive and Upload Resource Packs
-    runs-on: ubuntu-latest  # Используем последнюю версию Ubuntu для выполнения шагов
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4  # Клонируем репозиторий для доступа к его содержимому
+        uses: actions/checkout@v4
 
       - name: Generate tag and push it
         run: |
-          TAG_NAME="v$(date +'%Y%m%d-%H%M%S')"  # Генерируем уникальный тег на основе текущей даты и времени
-          git config --global user.name "github-actions[bot]"  # Настройка имени пользователя для создания тега
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"  # Настройка email для тега
-          git tag $TAG_NAME  # Создаём новый тег в репозитории
-          git push origin $TAG_NAME  # Отправляем тег в удалённый репозиторий
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV  # Записываем тег в переменные окружения для дальнейшего использования
+          TAG_NAME="v$(date +'%Y%m%d-%H%M%S')"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
 
       - name: Create archives
         run: |
-          mkdir -p archives  # Создаём папку для архивов
-
-          # Перебираем все подпапки внутри resource_packs/
+          mkdir -p archives
           for dir in resource_packs/*/; do
-            dir_name=$(basename "$dir")  # Получаем имя папки, например smp.projectbw.ru
-            archive_name=$(echo "$dir_name" | awk '{print toupper($0)}')  # Преобразуем имя архива в верхний регистр
-
-            # Переходим в папку ресурса и архивируем её содержимое (без вложенной директории)
+            dir_name=$(basename "$dir")
+            archive_name=$(echo "$dir_name" | awk '{print toupper($0)}')
             (cd "$dir" && zip -r "../../archives/${archive_name}.zip" .)
           done
 
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v2  # Используем action для создания релиза на GitHub
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.TAG_NAME }}  # Используем ранее созданный тег для релиза
-          files: archives/*.zip  # Загружаем все архивы в релиз
-          body: "Автоматическая сборка ресурсов"  # Тело релиза
-          draft: false  # Устанавливаем релиз как готовый для публичного доступа
-          prerelease: false  # Устанавливаем релиз как стабильный
+          tag_name: ${{ env.TAG_NAME }}
+          files: archives/*.zip
+          body: "Автоматическая сборка ресурсов"
+          draft: false
+          prerelease: false
 
-      - name: Check DNS resolution and ping
-        run: |
-          nslookup ${{ secrets.GLOBAL_FTP_HOST }}
-          ping -c 3 ${{ secrets.GLOBAL_FTP_HOST }}
-
-      - name: Upload files via SSH (rsync)
+      - name: Remove old archives on server 1 except BlankPack.zip
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.GLOBAL_FTP_HOST }}
           username: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
           script: |
-            mkdir -p $GLOBAL_FTP_PATH
-            rsync -avz --progress -e "ssh -o StrictHostKeyChecking=no" archives/*.zip $GLOBAL_FTP_USERNAME@$GLOBAL_FTP_HOST:$GLOBAL_FTP_PATH/
-        env:
-          GLOBAL_FTP_PATH: ${{ secrets.GLOBAL_FTP_PATH }}
-          GLOBAL_FTP_USERNAME: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          GLOBAL_FTP_HOST: ${{ secrets.GLOBAL_FTP_HOST }}
+            find ${{ secrets.GLOBAL_FTP_PATH }} -maxdepth 1 -type f -name "*.zip" ! -name "BlankPack.zip" -delete || true
 
-      - name: Upload files via SSH2 (rsync)
+      - name: Upload files via SCP (server 1)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.GLOBAL_FTP_HOST }}
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
+          source: "archives/*.zip"
+          target: "${{ secrets.GLOBAL_FTP_PATH }}"
+          strip_components: 1
+
+      - name: Remove old archives on server 2 except BlankPack.zip
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.GLOBAL_FTP_HOST }}
           username: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
           script: |
-            mkdir -p $GLOBAL_FTP_PATH2
-            rsync -avz --progress -e "ssh -o StrictHostKeyChecking=no" archives/*.zip $GLOBAL_FTP_USERNAME@$GLOBAL_FTP_HOST:$GLOBAL_FTP_PATH2/
-        env:
-          GLOBAL_FTP_PATH2: ${{ secrets.GLOBAL_FTP_PATH2 }}
-          GLOBAL_FTP_USERNAME: ${{ secrets.GLOBAL_FTP_USERNAME }}
-          GLOBAL_FTP_HOST: ${{ secrets.GLOBAL_FTP_HOST }}
+            find ${{ secrets.GLOBAL_FTP_PATH2 }} -maxdepth 1 -type f -name "*.zip" ! -name "BlankPack.zip" -delete || true
+
+      - name: Upload files via SCP (server 2)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.GLOBAL_FTP_HOST }}
+          username: ${{ secrets.GLOBAL_FTP_USERNAME }}
+          password: ${{ secrets.GLOBAL_FTP_PASSWORD }}
+          source: "archives/*.zip"
+          target: "${{ secrets.GLOBAL_FTP_PATH2 }}"
+          strip_components: 1
