@@ -1,0 +1,33 @@
+{
+	"hrdavalorant.kill": {
+		"sounds": [
+			"hrdavalorant/kill"
+		]
+	},
+	"hrdavalorant.ace": {
+		"sounds": [
+			"hrdavalorant/ace"
+		]
+	},
+	"hrdavalorant.end": {
+		"sounds": [
+			"hrdavalorant/end"
+		]
+	},
+	"hrdavalorant.gun1": {
+		"sounds": [
+			"hrdavalorant/gun1"
+		]
+	},
+	"hrdavalorant.gun2": {
+		"sounds": [
+			"hrdavalorant/gun2"
+		]
+	},
+	"hrdavalorant.sniper": {
+		"sounds": [
+			"hrdavalorant/sniper"
+		]
+	}
+
+}

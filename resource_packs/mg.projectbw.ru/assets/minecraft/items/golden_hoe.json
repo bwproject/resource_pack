@@ -1,0 +1,20 @@
+{
+    "hand_animation_on_swap": false,
+    "model": {
+        "type": "range_dispatch",
+        "property": "custom_model_data",
+        "fallback": {
+            "type": "model",
+            "model": "item/golden_hoe"
+        },
+        "entries": [
+            {
+                "threshold": 4,
+                "model": {
+                    "type": "model",
+                    "model": "item/vandal"
+                }
+            }
+        ]
+    }
+}

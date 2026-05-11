@@ -1,0 +1,20 @@
+{
+    "hand_animation_on_swap": false,
+    "model": {
+        "type": "range_dispatch",
+        "property": "custom_model_data",
+        "fallback": {
+            "type": "model",
+            "model": "item/stone_hoe"
+        },
+        "entries": [
+            {
+                "threshold": 2,
+                "model": {
+                    "type": "model",
+                    "model": "item/ghost"
+                }
+            }
+        ]
+    }
+}
